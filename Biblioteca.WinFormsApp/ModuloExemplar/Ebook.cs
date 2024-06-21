@@ -1,4 +1,6 @@
 ﻿using Biblioteca.WinFormsApp.Compartilhado;
+using System;
+using System.Collections.Generic;
 
 public class Ebook : Exemplar
 {
@@ -6,9 +8,18 @@ public class Ebook : Exemplar
     public string Formato { get; set; }
     public string Url { get; set; }
 
-    public Ebook(string titulo, string subTitulo, string escritor, string editora, int anoPublicacao, string genero, int status, decimal tamanho, string formato, string url)
+    public Ebook(string titulo, string subTitulo, string escritor, string editora, int anoPublicacao, string genero, ExemplarStatus status, decimal tamanho, string formato, string url)
         : base(titulo, subTitulo, escritor, editora, anoPublicacao, genero, status)
     {
+        if (tamanho <= 0)
+            throw new ArgumentException("O tamanho do arquivo é obrigatório e deve ser maior que zero.", nameof(tamanho));
+
+        if (string.IsNullOrWhiteSpace(formato))
+            throw new ArgumentException("O formato do arquivo é obrigatório.", nameof(formato));
+
+        if (string.IsNullOrWhiteSpace(url))
+            throw new ArgumentException("A URL do arquivo é obrigatória.", nameof(url));
+
         Tamanho = tamanho;
         Formato = formato;
         Url = url;
@@ -34,10 +45,13 @@ public class Ebook : Exemplar
             erros.Add("O gênero é obrigatório.");
 
         if (Tamanho <= 0)
-            erros.Add("O tamanho do arquivo é obrigatório.");
+            erros.Add("O tamanho do arquivo é obrigatório e deve ser maior que zero.");
 
         if (string.IsNullOrWhiteSpace(Formato))
             erros.Add("O formato do arquivo é obrigatório.");
+
+        if (string.IsNullOrWhiteSpace(Url))
+            erros.Add("A URL do arquivo é obrigatória.");
 
         return erros;
     }

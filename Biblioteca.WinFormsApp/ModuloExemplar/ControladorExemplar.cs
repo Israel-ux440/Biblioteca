@@ -1,6 +1,5 @@
 ﻿using Biblioteca.WinFormsApp.Compartilhado;
 using System.Collections.Generic;
-using System.Linq;
 using System.Windows.Forms;
 
 namespace Biblioteca.WinFormsApp.ModuloExemplar
@@ -8,10 +7,12 @@ namespace Biblioteca.WinFormsApp.ModuloExemplar
     public class ControladorExemplar : ControladorBase
     {
         private IRepositorioExemplar repositorioExemplar;
+        private TabelaExemplarControl tabelaExemplar;
 
         public ControladorExemplar(IRepositorioExemplar repositorio)
         {
             this.repositorioExemplar = repositorio;
+            this.tabelaExemplar = new TabelaExemplarControl();
             InicializarExemplares();
         }
 
@@ -21,9 +22,9 @@ namespace Biblioteca.WinFormsApp.ModuloExemplar
             {
                 for (int i = 1; i <= 5; i++)
                 {
-                    var ebook = new Ebook($"Ebook {i}", $"Subtitulo {i}", $"Escritor {i}", $"Editora {i}", 2021, $"Genero {i}", (int)EnumExemplarStatus.Pendente, 1.2m, "PDF", $"url{i}.com");
-                    var hq = new Hq($"HQ {i}", $"Subtitulo {i}", $"Escritor {i}", $"Editora {i}", 2021, $"Genero {i}", (int)EnumExemplarStatus.Pendente, $"Ilustrador {i}");
-                    var revista = new Revista($"Revista {i}", $"Subtitulo {i}", $"Escritor {i}", $"Editora {i}", 2021, $"Genero {i}", (int)EnumExemplarStatus.Pendente, 100, i);
+                    var ebook = new Ebook($"Ebook {i}", $"Subtitulo {i}", $"Escritor {i}", $"Editora {i}", 2021, $"Genero {i}", ExemplarStatus.Disponivel, 1.2m, "PDF", $"url{i}.com");
+                    var hq = new Hq($"HQ {i}", $"Subtitulo {i}", $"Escritor {i}", $"Editora {i}", 2021, $"Genero {i}", ExemplarStatus.Disponivel, $"Ilustrador {i}");
+                    var revista = new Revista($"Revista {i}", $"Subtitulo {i}", $"Escritor {i}", $"Editora {i}", 2021, $"Genero {i}", ExemplarStatus.Disponivel, 100, i);
 
                     repositorioExemplar.Cadastrar(ebook);
                     repositorioExemplar.Cadastrar(hq);
@@ -44,12 +45,12 @@ namespace Biblioteca.WinFormsApp.ModuloExemplar
             {
                 Exemplar novoExemplar = tela.Exemplar;
                 repositorioExemplar.Cadastrar(novoExemplar);
+                AtualizarTabela();
             }
         }
 
         public override void Editar()
         {
-            TabelaExemplarControl tabelaExemplar = new TabelaExemplarControl();
             int idSelecionado = tabelaExemplar.SelecionarId();
             if (idSelecionado == -1)
             {
@@ -59,19 +60,17 @@ namespace Biblioteca.WinFormsApp.ModuloExemplar
 
             Exemplar exemplarSelecionado = repositorioExemplar.SelecionarPorId(idSelecionado);
 
-            TelaExemplarForm tela = new TelaExemplarForm();
-            tela.Exemplar = exemplarSelecionado;
-
+            TelaExemplarForm tela = new TelaExemplarForm(exemplarSelecionado);
             if (tela.ShowDialog() == DialogResult.OK)
             {
                 Exemplar exemplarEditado = tela.Exemplar;
                 repositorioExemplar.Editar(exemplarEditado.Id, exemplarEditado);
+                AtualizarTabela();
             }
         }
 
         public override void Excluir()
         {
-            TabelaExemplarControl tabelaExemplar = new TabelaExemplarControl();
             int idSelecionado = tabelaExemplar.SelecionarId();
             if (idSelecionado == -1)
             {
@@ -80,11 +79,18 @@ namespace Biblioteca.WinFormsApp.ModuloExemplar
             }
 
             repositorioExemplar.Excluir(idSelecionado);
+            AtualizarTabela();
         }
 
         public override UserControl ObterListagem()
         {
-            return new TabelaExemplarControl();
+            tabelaExemplar.AtualizarRegistros(repositorioExemplar.SelecionarTodos());
+            return tabelaExemplar;
+        }
+
+        private void AtualizarTabela()
+        {
+            tabelaExemplar.AtualizarRegistros(repositorioExemplar.SelecionarTodos());
         }
     }
 }

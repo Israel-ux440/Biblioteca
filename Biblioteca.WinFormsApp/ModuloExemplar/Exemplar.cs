@@ -1,4 +1,5 @@
 ﻿using Biblioteca.WinFormsApp.Compartilhado;
+using System;
 
 public abstract class Exemplar : EntidadeBase
 {
@@ -8,10 +9,19 @@ public abstract class Exemplar : EntidadeBase
     public string Editora { get; set; }
     public int AnoPublicacao { get; set; }
     public string Genero { get; set; }
-    public int Status { get; set; }
+    public ExemplarStatus Status { get; set; }
 
-    protected Exemplar(string titulo, string subTitulo, string escritor, string editora, int anoPublicacao, string genero, int status)
+    protected Exemplar(string titulo, string subTitulo, string escritor, string editora, int anoPublicacao, string genero, ExemplarStatus status)
     {
+        if (string.IsNullOrEmpty(titulo))
+            throw new ArgumentException("Título é obrigatório.", nameof(titulo));
+
+        if (string.IsNullOrEmpty(escritor))
+            throw new ArgumentException("Escritor é obrigatório.", nameof(escritor));
+
+        if (anoPublicacao < 0 || anoPublicacao > DateTime.Now.Year)
+            throw new ArgumentOutOfRangeException(nameof(anoPublicacao), "Ano de publicação inválido.");
+
         Titulo = titulo;
         SubTitulo = subTitulo;
         Escritor = escritor;
@@ -22,4 +32,12 @@ public abstract class Exemplar : EntidadeBase
     }
 
     public abstract override void AtualizarRegistro(EntidadeBase novoRegistro);
+}
+
+public enum ExemplarStatus
+{
+    Disponivel,
+    Emprestado,
+    Reservado,
+    Indisponivel
 }

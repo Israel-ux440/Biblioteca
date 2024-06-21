@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using Biblioteca.WinFormsApp.Compartilhado;
+using System.Collections.Generic;
 using System.Windows.Forms;
 
 namespace Biblioteca.WinFormsApp.ModuloExemplar
@@ -9,6 +10,8 @@ namespace Biblioteca.WinFormsApp.ModuloExemplar
         {
             InitializeComponent();
             ConfigurarColunas();
+            gridExemplar.ConfigurarGridZebrado();
+            gridExemplar.ConfigurarGridSomenteLeitura();
         }
 
         public void AtualizarRegistros(List<Exemplar> exemplares)

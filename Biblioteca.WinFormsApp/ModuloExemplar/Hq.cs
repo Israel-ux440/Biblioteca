@@ -1,12 +1,17 @@
 ﻿using Biblioteca.WinFormsApp.Compartilhado;
+using System;
+using System.Collections.Generic;
 
 public class Hq : Exemplar
 {
     public string Ilustrador { get; set; }
 
-    public Hq(string titulo, string subTitulo, string escritor, string editora, int anoPublicacao, string genero, int status, string ilustrador)
+    public Hq(string titulo, string subTitulo, string escritor, string editora, int anoPublicacao, string genero, ExemplarStatus status, string ilustrador)
         : base(titulo, subTitulo, escritor, editora, anoPublicacao, genero, status)
     {
+        if (string.IsNullOrWhiteSpace(ilustrador))
+            throw new ArgumentException("O ilustrador é obrigatório.", nameof(ilustrador));
+
         Ilustrador = ilustrador;
     }
 

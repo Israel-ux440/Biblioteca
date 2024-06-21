@@ -1,13 +1,21 @@
 ﻿using Biblioteca.WinFormsApp.Compartilhado;
+using System;
+using System.Collections.Generic;
 
 public class Revista : Exemplar
 {
     public int Paginas { get; set; }
     public int Edicao { get; set; }
 
-    public Revista(string titulo, string subTitulo, string escritor, string editora, int anoPublicacao, string genero, int status, int paginas, int edicao)
+    public Revista(string titulo, string subTitulo, string escritor, string editora, int anoPublicacao, string genero, ExemplarStatus status, int paginas, int edicao)
         : base(titulo, subTitulo, escritor, editora, anoPublicacao, genero, status)
     {
+        if (paginas <= 0)
+            throw new ArgumentException("O número de páginas é obrigatório e deve ser maior que zero.", nameof(paginas));
+
+        if (edicao <= 0)
+            throw new ArgumentException("A edição é obrigatória e deve ser maior que zero.", nameof(edicao));
+
         Paginas = paginas;
         Edicao = edicao;
     }
@@ -32,10 +40,10 @@ public class Revista : Exemplar
             erros.Add("O gênero é obrigatório.");
 
         if (Paginas <= 0)
-            erros.Add("O número de páginas é obrigatório.");
+            erros.Add("O número de páginas é obrigatório e deve ser maior que zero.");
 
         if (Edicao <= 0)
-            erros.Add("A edição é obrigatória.");
+            erros.Add("A edição é obrigatória e deve ser maior que zero.");
 
         return erros;
     }
