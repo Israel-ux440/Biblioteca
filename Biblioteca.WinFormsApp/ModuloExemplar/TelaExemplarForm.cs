@@ -24,7 +24,7 @@ namespace Biblioteca.WinFormsApp.ModuloExemplar
             txtEditora.Text = exemplar.Editora;
             nudAnoPublicacao.Value = exemplar.AnoPublicacao;
             txtGenero.Text = exemplar.Genero;
-            cbStatus.SelectedItem = exemplar.Status;
+            cbStatus.SelectedItem = exemplar.Status.ToString();
 
             // Mostrar campos específicos conforme o tipo de Exemplar
             if (exemplar is Ebook ebook)
@@ -34,12 +34,15 @@ namespace Biblioteca.WinFormsApp.ModuloExemplar
                 nudTamanho.Value = ebook.Tamanho;
                 txtUrl.Visible = true;
                 nudTamanho.Visible = true;
+                lblUrl.Visible = true;
+                lblTamanho.Visible = true;
             }
             else if (exemplar is Hq hq)
             {
                 cbTipoExemplar.SelectedItem = "Hq";
                 txtIlustrador.Text = hq.Ilustrador;
                 txtIlustrador.Visible = true;
+                lblIlustrador.Visible = true;
             }
             else if (exemplar is Revista revista)
             {
@@ -48,6 +51,8 @@ namespace Biblioteca.WinFormsApp.ModuloExemplar
                 nudEdicao.Value = revista.Edicao;
                 nudPaginas.Visible = true;
                 nudEdicao.Visible = true;
+                lblPaginas.Visible = true;
+                lblEdicao.Visible = true;
             }
         }
 
@@ -67,7 +72,12 @@ namespace Biblioteca.WinFormsApp.ModuloExemplar
                 return;
             }
 
-            ExemplarStatus status = (ExemplarStatus)cbStatus.SelectedItem;
+            if (!Enum.TryParse(cbStatus.SelectedItem.ToString(), out ExemplarStatus status))
+            {
+                MessageBox.Show("Status inválido.", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                DialogResult = DialogResult.None;
+                return;
+            }
 
             if (string.IsNullOrWhiteSpace(titulo) || string.IsNullOrWhiteSpace(escritor) ||
                 string.IsNullOrWhiteSpace(editora) || string.IsNullOrWhiteSpace(genero))
@@ -144,6 +154,11 @@ namespace Biblioteca.WinFormsApp.ModuloExemplar
             txtIlustrador.Visible = false;
             nudPaginas.Visible = false;
             nudEdicao.Visible = false;
+            lblUrl.Visible = false;
+            lblTamanho.Visible = false;
+            lblIlustrador.Visible = false;
+            lblPaginas.Visible = false;
+            lblEdicao.Visible = false;
 
             // Mostrar campos específicos conforme o tipo de Exemplar selecionado
             string tipoExemplar = cbTipoExemplar.SelectedItem?.ToString();
@@ -154,13 +169,18 @@ namespace Biblioteca.WinFormsApp.ModuloExemplar
                 case "Ebook":
                     txtUrl.Visible = true;
                     nudTamanho.Visible = true;
+                    lblUrl.Visible = true;
+                    lblTamanho.Visible = true;
                     break;
                 case "Hq":
                     txtIlustrador.Visible = true;
+                    lblIlustrador.Visible = true;
                     break;
                 case "Revista":
                     nudPaginas.Visible = true;
                     nudEdicao.Visible = true;
+                    lblPaginas.Visible = true;
+                    lblEdicao.Visible = true;
                     break;
             }
         }
