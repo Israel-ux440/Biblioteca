@@ -3,6 +3,7 @@ using System.Windows.Forms;
 using Biblioteca.WinFormsApp.ModuloLeitor;
 using Biblioteca.WinFormsApp.ModuloExemplar;
 using Biblioteca.WinFormsApp.Compartilhado;
+using System.Security.Cryptography.X509Certificates;
 
 namespace Biblioteca.WinFormsApp
 {
@@ -61,6 +62,7 @@ namespace Biblioteca.WinFormsApp
             pnlRegistros.Controls.Add(listagem);
         }
 
+       
         private void btnAdicionar_Click(object sender, EventArgs e)
         {
             controlador.Adicionar();

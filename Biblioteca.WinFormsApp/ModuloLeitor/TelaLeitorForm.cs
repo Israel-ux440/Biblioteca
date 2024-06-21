@@ -30,6 +30,7 @@ namespace Biblioteca.WinFormsApp.ModuloLeitor
             string email = txtEmail.Text;
             string telefone = txtTelefone.Text;
 
+
             if (string.IsNullOrWhiteSpace(nome) || string.IsNullOrWhiteSpace(cpf) ||
                 string.IsNullOrWhiteSpace(email))
             {
@@ -37,6 +38,7 @@ namespace Biblioteca.WinFormsApp.ModuloLeitor
                 DialogResult = DialogResult.None;
                 return;
             }
+
 
             if (Leitor == null)
             {
